@@ -14,7 +14,6 @@ namespace PatronageWP
         public PlaceService()
         {
             _places = new List<Place>();
-
         }
 
         public void AddPlace(Place p)
@@ -24,7 +23,6 @@ namespace PatronageWP
 
         public List<Place> GetPlaces()
         {
-            //return new ReadOnlyCollection<Place>(_places);
             return _places;
         }
     }

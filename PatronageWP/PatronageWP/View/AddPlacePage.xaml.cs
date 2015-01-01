@@ -63,11 +63,7 @@ namespace PatronageWP
 
         async private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Geolocator _geolocator = new Geolocator(); 
-            Geoposition pos = await _geolocator.GetGeopositionAsync();
 
-            PlaceViewModel.Place.Latitude = pos.Coordinate.Point.Position.Latitude;
-            PlaceViewModel.Place.Longitude = pos.Coordinate.Point.Position.Longitude; 
         }
 
 
