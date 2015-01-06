@@ -12,15 +12,19 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Navigation;
 using Windows.Devices.Geolocation;
+using Windows.Phone.UI.Input;
+using PatronageWP.Model;
+using PatronageWP.View;
 
-namespace PatronageWP
+namespace PatronageWP.ViewModel
 {
     class AddPlacePageViewModel:ObservableObject
     {
-        Place _place;
-        RelayCommand _addCommand;
-        RelayCommand _clearCommand;
-        Geolocator _geolocator;
+        private Place _place;
+        private RelayCommand _addCommand;
+        private RelayCommand _clearCommand;
+        private Geolocator _geolocator;
+        private NavigationService _navigationService;
 
         PlaceService _placesList { get; set; }
         public Place Place
@@ -48,9 +52,25 @@ namespace PatronageWP
 
         public AddPlacePageViewModel()
         {
-            _placesList = new PlaceService();
+            _navigationService = NavigationService.Instance;
+            _placesList = PlaceService.Instance;
             _geolocator = new Geolocator();
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             NewPlace();
+        }
+
+        private void GoBack()
+        {
+            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            _navigationService.GoBack();
+           // _navigationService.Navigate(typeof(PlacesList));
+
+        }
+
+        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            GoBack();
         }
 
         public void PlaceChange(Object sender, PropertyChangedEventArgs e)
@@ -63,7 +83,8 @@ namespace PatronageWP
         {
             _placesList.AddPlace(_place);
             NewPlace();
-            (new MessageDialog("Dodano poprawnie "+_placesList.GetPlaces().Count+" lokalizację")).ShowAsync();
+            GoBack();
+            //(new MessageDialog("Dodano poprawnie "+_placesList.GetPlaces().Count+" lokalizację")).ShowAsync();
         }
 
         bool CanAdd()
@@ -78,29 +99,24 @@ namespace PatronageWP
 
         void ClearExecute()
         {
-            MessageDialog md = new MessageDialog("Czy chcesz usunąć?");
+            GoBack();
+            /*
+            var md = new MessageDialog("Czy chcesz usunąć?");
             md.Commands.Add(new UICommand("Tak", x =>
             {
                 NewPlace();
             }));
             md.Commands.Add(new UICommand("Nie"));
             md.ShowAsync();
+             */
         }
 
         public RelayCommand AddPlace { 
-            get 
-            {
-                if (_addCommand == null) _addCommand = new RelayCommand(AddExecute, CanAdd);
-                return _addCommand;
-            } 
+            get { return _addCommand ?? (_addCommand = new RelayCommand(AddExecute, CanAdd)); }
         }
         public RelayCommand ClearPlace
         { 
-            get 
-            {
-                if (_clearCommand == null) _clearCommand = new RelayCommand(ClearExecute, CanClear);
-                return _clearCommand;
-            } 
+            get { return _clearCommand ?? (_clearCommand = new RelayCommand(ClearExecute, CanClear)); }
         }
     }
 }

@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using PatronageWP.View;
+using PatronageWP.Model;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -51,11 +53,14 @@ namespace PatronageWP
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-
+            
             Frame rootFrame = Window.Current.Content as Frame;
-
+            NavigationService navigation = NavigationService.Instance;
+            navigation.RegisterRootFrame((Window.Current.Content as Frame)??new Frame(){CacheSize = 1});
+            navigation.Navigate(typeof(PlacesList));
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
+            /*
             if (rootFrame == null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
@@ -95,7 +100,7 @@ namespace PatronageWP
                 {
                     throw new Exception("Failed to create initial page");
                 }
-            }
+            }*/
 
             // Ensure the current window is active
             Window.Current.Activate();

@@ -5,25 +5,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Windows.UI.Popups;
+using MicroMvvm;
 
 namespace PatronageWP
 {
-    class PlaceService : IPlaceService
+    class PlaceService : ObservableObject,IPlaceService
     {
-        List<Place> _places;
-        public PlaceService()
+        ObservableCollection<Place> _places;
+
+       private static PlaceService _instance;
+
+
+       public static PlaceService Instance
+       {
+          get { return _instance ?? (_instance = new PlaceService()); }
+       }
+
+
+        private PlaceService()
         {
-            _places = new List<Place>();
+            _places = new ObservableCollection<Place>();
         }
+
 
         public void AddPlace(Place p)
         {
             _places.Add(p);
+            RaisePropertyChanged("GetPlaces");
         }
 
-        public List<Place> GetPlaces()
+        public IReadOnlyCollection<Place> GetPlaces()
         {
-            return _places;
+            return new ReadOnlyCollection<Place>(_places); 
         }
     }
 }

@@ -9,6 +9,6 @@ namespace PatronageWP
     interface IPlaceService
     {
         void AddPlace(Place p);
-        List<Place> GetPlaces();
+        IReadOnlyCollection<Place> GetPlaces();
     }
 }

@@ -4,13 +4,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MicroMvvm;
 
 namespace PatronageWP
 {
-    class Place:INotifyPropertyChanged
+    class Place:ObservableObject//INotifyPropertyChanged
     {
         private string _name;
-        private string _address;
+        private string _adress;
         private double _latitude;
         private double _longitude;
         private bool _hasWifi;
@@ -23,16 +24,17 @@ namespace PatronageWP
             set
             {
                 _name = value;
-                NotifyPropertyChanged("Name");
+                this.RaisePropertyChanged("Name");
+                //NotifyPropertyChanged("Name");
             }
         }
-        public string Address
+        public string Adress
         {
-            get { return _address; }
+            get { return _adress; }
             set
             {
-                _address = value;
-                NotifyPropertyChanged("Address");
+                _adress = value;
+                RaisePropertyChanged("Adress");
             }
         }
         public double Latitude
@@ -41,7 +43,7 @@ namespace PatronageWP
             set
             {
                 _latitude = value;
-                NotifyPropertyChanged("Latitude");
+                RaisePropertyChanged("Latitude");
             }
         }
         public double Longitude
@@ -50,8 +52,13 @@ namespace PatronageWP
             set
             {
                 _longitude = value;
-                NotifyPropertyChanged("Longitude");
+                RaisePropertyChanged("Longitude");
             }
+        }
+
+        public string Position
+        {
+            get { return Latitude.ToString() + ',' + Longitude.ToString(); }
         }
         public bool HasWifi 
         { 
@@ -59,18 +66,18 @@ namespace PatronageWP
             set
             {
                 _hasWifi = value;
-                NotifyPropertyChanged("HasWifi");
+                RaisePropertyChanged("HasWifi");
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {
-            return string.Format("{0}, {1}",Name,Address);
+            return string.Format("{0}, {1}",Name,Adress);
         }
 
-
+/*
         protected void NotifyPropertyChanged(String info)
         {
             if (PropertyChanged != null)
@@ -78,6 +85,6 @@ namespace PatronageWP
                 PropertyChanged(this, new PropertyChangedEventArgs(info));
             }
         }
-
+        */
     }
 }
